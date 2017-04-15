@@ -23,28 +23,48 @@ public class MyDialog extends DialogFragment {
 
     private EditText edtAmount, edtComment, edtDate;
     private AppCompatImageButton imgBtnIncrease, imgBtnDecrease, imgBtnPickDate;
+    private DialogListener mListener;
+    private long id = 0;
+    private String date, comment;
+    private int amount;
 
     public interface DialogListener {
-        public void onDialogPositiveClick(int amount, String date, String comment);
+        public void onDialogPositiveClick(long id, int amount, String date, String comment);
     }
 
-    DialogListener mListner;
+    static MyDialog newInstance(long id, Expense_item item) {
+        MyDialog dialog = new MyDialog();
+
+        if (id > 0){
+            Log.d("newInstance", "id > 0");
+            Bundle bundle = new Bundle();
+            bundle.putLong("id", id);
+            bundle.putString("date", item.getDate());
+            bundle.putInt("amount", item.getAmount());
+            bundle.putString("comment", item.getComment());
+            dialog.setArguments(bundle);
+        }
+
+
+        return dialog;
+    }
 
     @Override public void onAttach(Context context) {
         super.onAttach(context);
 
         try {
-            mListner = (DialogListener) getActivity();
+            mListener = (DialogListener) getActivity();
         }catch (ClassCastException e){
             Log.e("MyDialog", e.toString());
         }
     }
 
-    @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
-
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Log.d("MyDialog", "onCreateDialog");
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.dialog_add,null);
+        View view = inflater.inflate(R.layout.dialog_add, null);
         edtAmount = (EditText) view.findViewById(R.id.edtAmount);
         edtComment = (EditText) view.findViewById(R.id.edtComment);
         edtDate = (EditText) view.findViewById(R.id.edtDate);
@@ -55,14 +75,33 @@ public class MyDialog extends DialogFragment {
         imgBtnIncrease.setOnClickListener(adjustListener);
         imgBtnDecrease.setOnClickListener(adjustListener);
 
-        //imgBtnPickDate.setEnabled(false);
+        if (savedInstanceState != null){
+            Log.d("onCreateDialog", "savedInstanceState != null");
+            id = savedInstanceState.getLong("id");
+            date = savedInstanceState.getString("date");
+            amount = savedInstanceState.getInt("amount");
+            comment = savedInstanceState.getString("comment");
+
+            edtAmount.setText(amount + "");
+            edtComment.setText(comment);
+        }else {
+            SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy/MM/dd");
+            date = sDateFormat.format(new java.util.Date());
+        }
+
+
+
+        // make it can not be edited
+        edtDate.setKeyListener(null);
+        edtDate.setText(date);
         imgBtnPickDate.setOnClickListener(pickDateListener);
 
         builder.setView(view)
             .setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
                 @Override public void onClick(DialogInterface dialog, int which) {
 
-                    mListner.onDialogPositiveClick(Integer.parseInt(edtAmount.getText().toString()),
+                    mListener.onDialogPositiveClick(id,
+                                                    Integer.parseInt(edtAmount.getText().toString()),
                                                     edtDate.getText().toString(),
                                                     edtComment.getText().toString());
                 }
@@ -95,14 +134,11 @@ public class MyDialog extends DialogFragment {
     AppCompatImageButton.OnClickListener pickDateListener =
         new AppCompatImageButton.OnClickListener() {
             @Override public void onClick(View v) {
-                SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy/MM/dd");
-                String date = sDateFormat.format(new java.util.Date());
-                //Toast.makeText(getActivity(), date, Toast.LENGTH_SHORT).show();
+                String date = edtDate.getText().toString();
                 int y = Integer.parseInt(date.substring(0,4));
                 int m = Integer.parseInt(date.substring(5,7));
                 int d = Integer.parseInt(date.substring(8,10));
 
-                //Toast.makeText(getActivity(), y + ":" + m+ ":" + d, Toast.LENGTH_SHORT).show();
                 // 跳出日期選擇器
                 DatePickerDialog pickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
                         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {

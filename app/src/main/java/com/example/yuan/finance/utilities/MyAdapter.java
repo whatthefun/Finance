@@ -12,15 +12,19 @@ import com.example.yuan.finance.R;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
-    //public static final int TYPE_HEADER = 0;
-    //public static final int TYPE_FOOTRT = 1;
-    //public static final int TYPE_NORMAL = 2;
+    final private ListItemLongClickListener mOnClickListener;
+
     private Cursor mCursor;
     private Context mContext;
 
-    public MyAdapter(Context context, Cursor cursor){
+    public MyAdapter(Context context, Cursor cursor, ListItemLongClickListener listener){
         this.mContext = context;
         this.mCursor = cursor;
+        this.mOnClickListener = listener;
+    }
+
+    public interface ListItemLongClickListener{
+        void onListItemLongClickListener(long id);
     }
 
     @Override
@@ -61,7 +65,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         }
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
 
         public TextView txtAmount, txtDate, txtComment;
         public LinearLayout item;
@@ -73,6 +77,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             txtDate = (TextView) v.findViewById(R.id.txtDate);
             txtAmount = (TextView) v.findViewById(R.id.txtAmount);
             txtComment = (TextView) v.findViewById(R.id.txtComment);
+            item.setOnLongClickListener(this);
+        }
+
+        @Override public boolean onLongClick(View v) {
+            mOnClickListener.onListItemLongClickListener((long)v.getTag());
+            return true;
         }
     }
 }
