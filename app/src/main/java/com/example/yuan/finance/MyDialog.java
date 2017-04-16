@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatImageButton;
 import android.util.Log;
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 import java.text.SimpleDateFormat;
 
 /**
@@ -21,6 +23,7 @@ import java.text.SimpleDateFormat;
 
 public class MyDialog extends DialogFragment {
 
+    private TextView txtTitle;
     private EditText edtAmount, edtComment, edtDate;
     private AppCompatImageButton imgBtnIncrease, imgBtnDecrease, imgBtnPickDate;
     private DialogListener mListener;
@@ -65,6 +68,8 @@ public class MyDialog extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_add, null);
+
+        txtTitle = (TextView) view.findViewById(R.id.txtTitle);
         edtAmount = (EditText) view.findViewById(R.id.edtAmount);
         edtComment = (EditText) view.findViewById(R.id.edtComment);
         edtDate = (EditText) view.findViewById(R.id.edtDate);
@@ -72,6 +77,9 @@ public class MyDialog extends DialogFragment {
         imgBtnDecrease = (AppCompatImageButton) view.findViewById(R.id.imgBtnDecrease);
         imgBtnPickDate = (AppCompatImageButton) view.findViewById(R.id.imgBtnPickDate);
 
+
+        Typeface font = Typeface.createFromAsset(getActivity().getAssets(), "fonts/chinese.ttf");
+        txtTitle.setTypeface(font);
         imgBtnIncrease.setOnClickListener(adjustListener);
         imgBtnDecrease.setOnClickListener(adjustListener);
 

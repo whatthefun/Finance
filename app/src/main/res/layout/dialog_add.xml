@@ -8,14 +8,14 @@
     >
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/txtTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/dialog_title_background"
-        android:padding="2dp"
+        android:background="@color/dodgerblue"
+        android:padding="5dp"
         android:text="@string/add_expense"
         android:textColor="@color/white"
-        android:textSize="25sp"
+        android:textSize="28sp"
         />
 
     <LinearLayout

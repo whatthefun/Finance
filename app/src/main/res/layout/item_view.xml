@@ -17,7 +17,7 @@
             android:id="@+id/txtDate"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:textColor="#FFBB00"
+            android:textColor="@color/mediumblue"
             tools:text="Date"
             style="@style/item_text"
             />

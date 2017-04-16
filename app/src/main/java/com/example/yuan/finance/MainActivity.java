@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.design.widget.FloatingActionButton;
@@ -31,7 +32,7 @@ public class MainActivity extends FragmentActivity
 
     public static final int QUERY_LOADER = 22;
     private FloatingActionButton fab;
-    private TextView txtMonth, txtYear, txtTotal;
+    private TextView txtMonth, txtYear, txtTotal, txtDate, txtAmount, txtComment;
     private RecyclerView recyclerView;
     private AppCompatImageButton imgBtnPreMonth, imgBtnAfterMonth;
     private SQLiteDatabase db;
@@ -184,10 +185,19 @@ public class MainActivity extends FragmentActivity
         fab = (FloatingActionButton) findViewById(R.id.fab);
         txtMonth = (TextView) findViewById(R.id.txtMonth);
         txtYear = (TextView) findViewById(R.id.txtYear);
+        txtDate = (TextView) findViewById(R.id.txtDate);
+        txtAmount = (TextView) findViewById(R.id.txtAmount);
+        txtComment = (TextView) findViewById(R.id.txtComment);
         txtTotal = (TextView) findViewById(R.id.txtTotal);
         imgBtnPreMonth = (AppCompatImageButton) findViewById(R.id.imgBtnPreMonth);
         imgBtnAfterMonth = (AppCompatImageButton) findViewById(R.id.imgBtAfterMonth);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+
+        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/chinese.ttf");
+        txtDate.setTypeface(font);
+        txtAmount.setTypeface(font);
+        txtComment.setTypeface(font);
+        txtTotal.setTypeface(font);
     }
 
     @Override public Loader<Cursor> onCreateLoader(int id, Bundle args) {
