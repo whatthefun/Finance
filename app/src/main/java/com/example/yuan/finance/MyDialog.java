@@ -35,7 +35,7 @@ public class MyDialog extends DialogFragment {
         public void onDialogPositiveClick(long id, int amount, String date, String comment);
     }
 
-    static MyDialog newInstance(long id, Expense_item item) {
+    public static MyDialog newInstance(long id, Expense_item item) {
         MyDialog dialog = new MyDialog();
 
         if (id > 0){
@@ -47,7 +47,6 @@ public class MyDialog extends DialogFragment {
             bundle.putString("comment", item.getComment());
             dialog.setArguments(bundle);
         }
-
 
         return dialog;
     }
@@ -83,12 +82,13 @@ public class MyDialog extends DialogFragment {
         imgBtnIncrease.setOnClickListener(adjustListener);
         imgBtnDecrease.setOnClickListener(adjustListener);
 
-        if (savedInstanceState != null){
+
+        if (getArguments() != null && !getArguments().isEmpty() ){
             Log.d("onCreateDialog", "savedInstanceState != null");
-            id = savedInstanceState.getLong("id");
-            date = savedInstanceState.getString("date");
-            amount = savedInstanceState.getInt("amount");
-            comment = savedInstanceState.getString("comment");
+            id = getArguments().getLong("id");
+            date = getArguments().getString("date");
+            amount = getArguments().getInt("amount");
+            comment = getArguments().getString("comment");
 
             edtAmount.setText(amount + "");
             edtComment.setText(comment);

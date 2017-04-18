@@ -26,6 +26,12 @@ import com.example.yuan.finance.utilities.MyAdapter;
 import com.example.yuan.finance.utilities.MyDBHelper;
 import java.text.SimpleDateFormat;
 
+// TODO: 2017/04/17 取消滑動刪除
+// TODO: 2017/04/17 備註改成卡片，備註改成icon info 
+// TODO: 2017/04/17 刪除改在dialog 
+// TODO: 2017/04/17 滑動翻月 
+// TODO: 2017/04/17  圓餅圖統計月
+// TODO: 2017/04/17 主題
 public class MainActivity extends FragmentActivity
     implements MyDialog.DialogListener, LoaderManager.LoaderCallbacks<Cursor>,
     MyAdapter.ListItemLongClickListener {
@@ -160,6 +166,7 @@ public class MainActivity extends FragmentActivity
         values.put("comment", comment);
         try {
             helper.getWritableDatabase().update("expense", values, "_id=" + id, null);
+            getSupportLoaderManager().restartLoader(QUERY_LOADER, null, this);
             Toast.makeText(MainActivity.this, "修改成功!", Toast.LENGTH_LONG).show();
         } catch (Exception e) {
             Toast.makeText(MainActivity.this, "修改失敗", Toast.LENGTH_LONG).show();
@@ -272,7 +279,7 @@ public class MainActivity extends FragmentActivity
         Toast.makeText(this, "id:" + id, Toast.LENGTH_SHORT).show();
         Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         vibrator.vibrate(300);
-        // TODO: 2017/04/15  長按修改
+
         Expense_item item = query(id);
 
         DialogFragment dialog = MyDialog.newInstance(id, item);
