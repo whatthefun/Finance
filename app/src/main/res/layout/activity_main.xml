@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,133 +8,25 @@
     android:orientation="vertical"
     >
 
-    <LinearLayout
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingBottom="5dp">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/white"
+        />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="2"
-            android:orientation="horizontal"
-            android:gravity="center"
-            >
-
-            <android.support.v7.widget.AppCompatImageButton
-                android:id="@+id/imgBtnPreMonth"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:gravity="start"
-                android:background="@drawable/bg_selector"
-                app:srcCompat="@drawable/ic_keyboard_arrow_left_black_24px"
-                />
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:background="@drawable/bg_selector"
-                >
-                <TextView
-                    android:id="@+id/txtYear"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_weight="1.5"
-                    android:textSize="18sp"
-                    tools:text="yyyy"
-                    android:background="@drawable/bg_selector"
-                    />
-                <TextView
-                    android:id="@+id/txtMonth"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_weight="3"
-                    android:textColor="@color/bark_blue"
-                    android:textSize="30sp"
-                    tools:text="MM月"
-                    android:background="@drawable/bg_selector"
-                    />
-            </LinearLayout>
-
-            <android.support.v7.widget.AppCompatImageButton
-                android:id="@+id/imgBtAfterMonth"
-                android:layout_width="0dp"
-                android:layout_height="50sp"
-                android:layout_weight="1"
-                android:gravity="end"
-                android:background="@drawable/bg_selector"
-                app:srcCompat="@drawable/ic_keyboard_arrow_right_black_24px"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="horizontal"
-            android:layout_marginLeft="5dp"
-            android:layout_marginBottom="3dp"
-            >
-            <TextView
-                android:id="@+id/txtDate"
-                android:layout_weight="1"
-                android:text="@string/date"
-                android:textColor="@color/mediumblue"
-                style="@style/item_text"
-                />
-
-            <TextView
-                android:id="@+id/txtAmount"
-                android:layout_weight="1"
-                android:text="@string/amount"
-                android:textColor="@color/bright_blue"
-                style="@style/item_text"
-                />
-
-            <TextView
-                android:id="@+id/txtComment"
-                android:layout_weight="2"
-                android:text="@string/comment"
-                android:textColor="#888888"
-                style="@style/item_text"
-                />
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/pastel_blue"/>
-
-        <android.support.v7.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="12"
-            android:id="@+id/recyclerView"
-            >
-        </android.support.v7.widget.RecyclerView>
-
-        <TextView
-            android:id="@+id/txtTotal"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1.5"
-            android:layout_marginLeft="5dp"
-            android:text="@string/total"
-            android:textSize="30sp"
-            android:textColor="@color/red"
-            />
-    </LinearLayout>
-
-    <android.support.design.widget.FloatingActionButton
-        app:srcCompat="@drawable/ic_add_circle_black_24px"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        app:backgroundTint="@color/black"
-        android:layout_margin="16dp"
-        android:id="@+id/fab"/>
-</FrameLayout>
+    <com.example.yuan.finance.MyTabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/green"
+        app:tabIndicatorHeight="5dp"
+        app:tabIndicatorColor="@color/blue"
+        app:tabTextColor="@color/white"
+        app:tabTextAppearance="@style/MyCustomTabText"
+        app:tabMode="scrollable"
+        app:tabGravity="fill"
+        app:tabMaxWidth="0dp"
+        />
+</LinearLayout>

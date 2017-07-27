@@ -1,9 +1,8 @@
-package com.example.yuan.finance;
+package com.example.yuan.finance.fragments;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
@@ -15,13 +14,15 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
+import com.example.yuan.finance.R;
+import com.example.yuan.finance.items.Expense_item;
 import java.text.SimpleDateFormat;
 
 /**
  * Created by YUAN on 2017/04/11.
  */
 
-public class MyDialog extends DialogFragment {
+public class MyDialog extends android.support.v4.app.DialogFragment {
 
     private TextView txtTitle;
     private EditText edtAmount, edtComment, edtDate;
@@ -52,15 +53,15 @@ public class MyDialog extends DialogFragment {
     }
 
     @Override public void onAttach(Context context) {
-        super.onAttach(context);
-
         try {
-            mListener = (DialogListener) getActivity();
+            mListener = (DialogListener) getParentFragment();
         }catch (ClassCastException e){
             Log.e("MyDialog", e.toString());
         }
+        super.onAttach(context);
     }
 
+    // TODO: 2017/04/18 了解oncreate oncreateview oncreatedialog 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Log.d("MyDialog", "onCreateDialog");
@@ -118,7 +119,8 @@ public class MyDialog extends DialogFragment {
                 @Override public void onClick(DialogInterface dialog, int which) {
                     MyDialog.this.getDialog().cancel();
                 }
-            });
+            })
+        ;
 
         return builder.create();
     }

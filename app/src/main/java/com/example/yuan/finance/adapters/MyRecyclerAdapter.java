@@ -1,4 +1,4 @@
-package com.example.yuan.finance.utilities;
+package com.example.yuan.finance.adapters;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -10,14 +10,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.example.yuan.finance.R;
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
+public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.ViewHolder> {
 
+    private static final String TAG = "MyRecyclerAdapter";
     final private ListItemLongClickListener mOnClickListener;
-
     private Cursor mCursor;
     private Context mContext;
 
-    public MyAdapter(Context context, Cursor cursor, ListItemLongClickListener listener){
+    public MyRecyclerAdapter(Context context, Cursor cursor, ListItemLongClickListener listener){
         this.mContext = context;
         this.mCursor = cursor;
         this.mOnClickListener = listener;
@@ -28,7 +28,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     }
 
     @Override
-    public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_view, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;

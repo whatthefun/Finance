@@ -1,6 +1,5 @@
-package com.example.yuan.finance;
+package com.example.yuan.finance.fragments;
 
-import android.app.DialogFragment;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -8,8 +7,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -18,23 +19,27 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
+import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.example.yuan.finance.utilities.MyAdapter;
-import com.example.yuan.finance.utilities.MyDBHelper;
+import com.example.yuan.finance.R;
+import com.example.yuan.finance.adapters.MyRecyclerAdapter;
+import com.example.yuan.finance.helpers.MyDBHelper;
+import com.example.yuan.finance.items.Expense_item;
 import java.text.SimpleDateFormat;
 
-// TODO: 2017/04/17 取消滑動刪除
-// TODO: 2017/04/17 備註改成卡片，備註改成icon info 
-// TODO: 2017/04/17 刪除改在dialog 
-// TODO: 2017/04/17 滑動翻月 
-// TODO: 2017/04/17  圓餅圖統計月
-// TODO: 2017/04/17 主題
-public class MainActivity extends FragmentActivity
+//import android.app.DialogFragment;
+//import android.app.Fragment;
+
+/**
+ * Created by YUAN on 2017/7/26.
+ */
+
+public class DetailFragment extends Fragment
     implements MyDialog.DialogListener, LoaderManager.LoaderCallbacks<Cursor>,
-    MyAdapter.ListItemLongClickListener {
+    MyRecyclerAdapter.ListItemLongClickListener {
 
     public static final int QUERY_LOADER = 22;
     private FloatingActionButton fab;
@@ -43,17 +48,18 @@ public class MainActivity extends FragmentActivity
     private AppCompatImageButton imgBtnPreMonth, imgBtnAfterMonth;
     private SQLiteDatabase db;
     private MyDBHelper helper;
-    private MyAdapter adapter;
+    private MyRecyclerAdapter adapter;
+    private int sum = 0;
 
-    @Override protected void onCreate(Bundle savedInstanceState) {
-        getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    @Nullable @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+        @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_detail, container, false);
 
-        helper = MyDBHelper.getInstance(this);
+        helper = MyDBHelper.getInstance(getActivity());
         db = helper.getWritableDatabase();
 
-        bindUI();
+        bindUI(view);
 
         setTime();
 
@@ -64,8 +70,8 @@ public class MainActivity extends FragmentActivity
         imgBtnAfterMonth.setOnClickListener(monthChangeListener);
 
         //set recyclerview
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new MyAdapter(this, null, this);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        adapter = new MyRecyclerAdapter(getActivity(), null, this);
         recyclerView.setAdapter(adapter);
 
         //左右滑
@@ -80,20 +86,24 @@ public class MainActivity extends FragmentActivity
                 @Override public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                     long id = (long) viewHolder.itemView.getTag();
                     delete(id);
-                    getSupportLoaderManager().restartLoader(QUERY_LOADER, null, MainActivity.this);
+                    getActivity().getSupportLoaderManager()
+                        .restartLoader(QUERY_LOADER, null, DetailFragment.this);
                 }
             }).attachToRecyclerView(recyclerView);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 Log.d("Main", "fab");
+
                 DialogFragment dialog = MyDialog.newInstance(0, null);
-                dialog.show(getFragmentManager(), "add");
+                dialog.show(getChildFragmentManager(), "add");
             }
         });
 
         //Loader initial
-        getSupportLoaderManager().initLoader(QUERY_LOADER, null, this);
+        getActivity().getSupportLoaderManager().initLoader(QUERY_LOADER, null, DetailFragment.this);
+
+        return view;
     }
 
     @Override public void onDialogPositiveClick(long id, int amount, String date, String comment) {
@@ -114,12 +124,12 @@ public class MainActivity extends FragmentActivity
         long id = 0;
         try {
             id = helper.getWritableDatabase().insert("expense", null, values);
-            getSupportLoaderManager().restartLoader(QUERY_LOADER, null, this);
-            Toast.makeText(MainActivity.this, "新增金額: " + amount, Toast.LENGTH_LONG).show();
+            getActivity().getSupportLoaderManager().restartLoader(QUERY_LOADER, null, this);
+            Toast.makeText(getActivity(), "新增金額: " + amount, Toast.LENGTH_LONG).show();
         } catch (Exception e) {
             Log.e("ADD", e.toString());
             Log.e("ADD", id + "");
-            Toast.makeText(MainActivity.this, "新增失敗", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "新增失敗", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -166,10 +176,10 @@ public class MainActivity extends FragmentActivity
         values.put("comment", comment);
         try {
             helper.getWritableDatabase().update("expense", values, "_id=" + id, null);
-            getSupportLoaderManager().restartLoader(QUERY_LOADER, null, this);
-            Toast.makeText(MainActivity.this, "修改成功!", Toast.LENGTH_LONG).show();
+            getActivity().getSupportLoaderManager().restartLoader(QUERY_LOADER, null, this);
+            Toast.makeText(getActivity(), "修改成功!", Toast.LENGTH_LONG).show();
         } catch (Exception e) {
-            Toast.makeText(MainActivity.this, "修改失敗", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "修改失敗", Toast.LENGTH_LONG).show();
             Log.e("Update", e.toString());
         }
     }
@@ -188,19 +198,19 @@ public class MainActivity extends FragmentActivity
         txtMonth.setText(time.substring(5) + "月");
     }
 
-    private void bindUI() {
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-        txtMonth = (TextView) findViewById(R.id.txtMonth);
-        txtYear = (TextView) findViewById(R.id.txtYear);
-        txtDate = (TextView) findViewById(R.id.txtDate);
-        txtAmount = (TextView) findViewById(R.id.txtAmount);
-        txtComment = (TextView) findViewById(R.id.txtComment);
-        txtTotal = (TextView) findViewById(R.id.txtTotal);
-        imgBtnPreMonth = (AppCompatImageButton) findViewById(R.id.imgBtnPreMonth);
-        imgBtnAfterMonth = (AppCompatImageButton) findViewById(R.id.imgBtAfterMonth);
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+    private void bindUI(View view) {
+        fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        txtMonth = (TextView) view.findViewById(R.id.txtMonth);
+        txtYear = (TextView) view.findViewById(R.id.txtYear);
+        txtDate = (TextView) view.findViewById(R.id.txtDate);
+        txtAmount = (TextView) view.findViewById(R.id.txtAmount);
+        txtComment = (TextView) view.findViewById(R.id.txtComment);
+        txtTotal = (TextView) view.findViewById(R.id.txtTotal);
+        imgBtnPreMonth = (AppCompatImageButton) view.findViewById(R.id.imgBtnPreMonth);
+        imgBtnAfterMonth = (AppCompatImageButton) view.findViewById(R.id.imgBtAfterMonth);
+        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
 
-        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/chinese.ttf");
+        Typeface font = Typeface.createFromAsset(getActivity().getAssets(), "fonts/chinese.ttf");
         txtDate.setTypeface(font);
         txtAmount.setTypeface(font);
         txtComment.setTypeface(font);
@@ -209,18 +219,15 @@ public class MainActivity extends FragmentActivity
 
     @Override public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Log.d("main", "onCreateLoader");
-        return new CursorLoader(this, null, null, null, null, null) {
+
+        return new CursorLoader(getActivity(), null, null, null, null, null) {
             @Override public Cursor loadInBackground() {
                 try {
                     final String y = txtYear.getText().toString();
                     final String m = txtMonth.getText().toString().substring(0, 2);
 
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-                            int sum = querySum(y, m);
-                            txtTotal.setText(getString(R.string.total) + sum);
-                        }
-                    });
+                    sum = querySum(y, m);
+
 
                     //搜尋指定月份的所有資料，並依照日期降冪排序
                     return query(y, m);
@@ -235,6 +242,7 @@ public class MainActivity extends FragmentActivity
     @Override public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         Log.d("main", "onLoadFinished");
         adapter.swapCursor(data);
+        txtTotal.setText("本月總金額:" + sum);
     }
 
     @Override public void onLoaderReset(Loader<Cursor> loader) {
@@ -264,25 +272,28 @@ public class MainActivity extends FragmentActivity
 
                 txtMonth.setText(String.format("%02d月", month));
                 txtYear.setText(String.format("%04d", year));
-                getSupportLoaderManager().restartLoader(QUERY_LOADER, null, MainActivity.this);
+                getActivity().getSupportLoaderManager()
+                    .restartLoader(QUERY_LOADER, null, DetailFragment.this);
             }
         };
 
     TextView.OnClickListener adjustTimeListener = new TextView.OnClickListener() {
         @Override public void onClick(View v) {
             setTime();
-            getSupportLoaderManager().restartLoader(QUERY_LOADER, null, MainActivity.this);
+            getActivity().getSupportLoaderManager()
+                .restartLoader(QUERY_LOADER, null, DetailFragment.this);
         }
     };
 
     @Override public void onListItemLongClickListener(long id) {
-        Toast.makeText(this, "id:" + id, Toast.LENGTH_SHORT).show();
-        Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        Toast.makeText(getActivity(), "id:" + id, Toast.LENGTH_SHORT).show();
+        Vibrator vibrator = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
         vibrator.vibrate(300);
 
         Expense_item item = query(id);
 
         DialogFragment dialog = MyDialog.newInstance(id, item);
-        dialog.show(getFragmentManager(), "add");
+        dialog.show(getChildFragmentManager(), "add");
+
     }
 }

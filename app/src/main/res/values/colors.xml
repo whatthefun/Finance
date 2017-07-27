@@ -15,4 +15,7 @@
     <color name="red">#FF0000</color>
     <color name="pastel_blue">#CCEEFF</color>
     <color name="colorless">#00000000</color>
+    <color name="green">#66CC99</color>
+    <color name="blue">#CCFFFF</color>
+    <color name="light_green">#BBFFEE</color>
 </resources>

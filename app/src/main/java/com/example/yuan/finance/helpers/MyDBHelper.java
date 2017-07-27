@@ -1,4 +1,4 @@
-package com.example.yuan.finance.utilities;
+package com.example.yuan.finance.helpers;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
