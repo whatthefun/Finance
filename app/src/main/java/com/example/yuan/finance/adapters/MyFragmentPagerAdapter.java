@@ -3,6 +3,7 @@ package com.example.yuan.finance.adapters;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.util.Log;
 import com.example.yuan.finance.fragments.ChartFragment;
 import com.example.yuan.finance.fragments.DetailFragment;
 
@@ -11,7 +12,7 @@ import com.example.yuan.finance.fragments.DetailFragment;
  */
 
 public class MyFragmentPagerAdapter extends FragmentPagerAdapter {
-
+    private static final String TAG = "MyFragmentPagerAdapter";
     private String[] mTitle = {"清單", "圖表"};
 
     public MyFragmentPagerAdapter(FragmentManager fm){
@@ -35,5 +36,10 @@ public class MyFragmentPagerAdapter extends FragmentPagerAdapter {
 
     @Override public CharSequence getPageTitle(int position) {
         return mTitle[position];
+    }
+
+    @Override public int getItemPosition(Object object) {
+        Log.d(TAG, "getItemPosition: ");
+        return POSITION_NONE;
     }
 }

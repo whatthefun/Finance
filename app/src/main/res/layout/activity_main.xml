@@ -25,7 +25,7 @@
         app:tabIndicatorColor="@color/blue"
         app:tabTextColor="@color/white"
         app:tabTextAppearance="@style/MyCustomTabText"
-        app:tabMode="scrollable"
+        app:tabMode="fixed"
         app:tabGravity="fill"
         app:tabMaxWidth="0dp"
         />

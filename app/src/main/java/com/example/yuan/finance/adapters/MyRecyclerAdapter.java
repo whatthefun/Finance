@@ -43,7 +43,7 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.Vi
 
         holder.txtDate.setText(mCursor.getString(mCursor.getColumnIndex("date")).substring(5));
         holder.txtAmount.setText("$" + mCursor.getInt(2) +"");
-        holder.txtComment.setText(mCursor.getString(3));
+        //holder.txtComment.setText(mCursor.getString(3));
         holder.item.setTag(mCursor.getLong(mCursor.getColumnIndex("_id")));
     }
 
@@ -76,7 +76,7 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.Vi
             item = (LinearLayout) v.findViewById(R.id.item);
             txtDate = (TextView) v.findViewById(R.id.txtDate);
             txtAmount = (TextView) v.findViewById(R.id.txtAmount);
-            txtComment = (TextView) v.findViewById(R.id.txtComment);
+            //txtComment = (TextView) v.findViewById(R.id.txtComment);
             item.setOnLongClickListener(this);
         }
 

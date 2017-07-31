@@ -17,13 +17,13 @@ import android.support.v4.content.Loader;
 import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.example.yuan.finance.MyDividerItemDecoration;
 import com.example.yuan.finance.R;
 import com.example.yuan.finance.adapters.MyRecyclerAdapter;
 import com.example.yuan.finance.helpers.MyDBHelper;
@@ -43,7 +43,7 @@ public class DetailFragment extends Fragment
 
     public static final int QUERY_LOADER = 22;
     private FloatingActionButton fab;
-    private TextView txtMonth, txtYear, txtTotal, txtDate, txtAmount, txtComment;
+    private TextView txtMonth, txtYear, txtTotal, txtDate, txtAmount;
     private RecyclerView recyclerView;
     private AppCompatImageButton imgBtnPreMonth, imgBtnAfterMonth;
     private SQLiteDatabase db;
@@ -71,25 +71,26 @@ public class DetailFragment extends Fragment
 
         //set recyclerview
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.addItemDecoration(new MyDividerItemDecoration(getActivity(), MyDividerItemDecoration.VERTICAL_LIST));
         adapter = new MyRecyclerAdapter(getActivity(), null, this);
         recyclerView.setAdapter(adapter);
 
         //左右滑
-        new ItemTouchHelper(
-            new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-                @Override
-                public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
-                    RecyclerView.ViewHolder target) {
-                    return false;
-                }
-
-                @Override public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                    long id = (long) viewHolder.itemView.getTag();
-                    delete(id);
-                    getActivity().getSupportLoaderManager()
-                        .restartLoader(QUERY_LOADER, null, DetailFragment.this);
-                }
-            }).attachToRecyclerView(recyclerView);
+        //new ItemTouchHelper(
+        //    new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+        //        @Override
+        //        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
+        //            RecyclerView.ViewHolder target) {
+        //            return false;
+        //        }
+        //
+        //        @Override public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+        //            long id = (long) viewHolder.itemView.getTag();
+        //            delete(id);
+        //            getActivity().getSupportLoaderManager()
+        //                .restartLoader(QUERY_LOADER, null, DetailFragment.this);
+        //        }
+        //    }).attachToRecyclerView(recyclerView);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
@@ -204,16 +205,16 @@ public class DetailFragment extends Fragment
         txtYear = (TextView) view.findViewById(R.id.txtYear);
         txtDate = (TextView) view.findViewById(R.id.txtDate);
         txtAmount = (TextView) view.findViewById(R.id.txtAmount);
-        txtComment = (TextView) view.findViewById(R.id.txtComment);
+        //txtComment = (TextView) view.findViewById(R.id.txtComment);
         txtTotal = (TextView) view.findViewById(R.id.txtTotal);
         imgBtnPreMonth = (AppCompatImageButton) view.findViewById(R.id.imgBtnPreMonth);
         imgBtnAfterMonth = (AppCompatImageButton) view.findViewById(R.id.imgBtAfterMonth);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
 
         Typeface font = Typeface.createFromAsset(getActivity().getAssets(), "fonts/chinese.ttf");
-        txtDate.setTypeface(font);
-        txtAmount.setTypeface(font);
-        txtComment.setTypeface(font);
+        //txtDate.setTypeface(font);
+        //txtAmount.setTypeface(font);
+        //txtComment.setTypeface(font);
         txtTotal.setTypeface(font);
     }
 
@@ -227,7 +228,6 @@ public class DetailFragment extends Fragment
                     final String m = txtMonth.getText().toString().substring(0, 2);
 
                     sum = querySum(y, m);
-
 
                     //搜尋指定月份的所有資料，並依照日期降冪排序
                     return query(y, m);
