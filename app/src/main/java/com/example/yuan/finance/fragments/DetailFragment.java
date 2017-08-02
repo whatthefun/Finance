@@ -1,12 +1,10 @@
 package com.example.yuan.finance.fragments;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
@@ -23,7 +21,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.example.yuan.finance.MyDividerItemDecoration;
 import com.example.yuan.finance.R;
 import com.example.yuan.finance.adapters.MyRecyclerAdapter;
 import com.example.yuan.finance.helpers.MyDBHelper;
@@ -39,7 +36,7 @@ import java.text.SimpleDateFormat;
 
 public class DetailFragment extends Fragment
     implements MyDialog.DialogListener, LoaderManager.LoaderCallbacks<Cursor>,
-    MyRecyclerAdapter.ListItemLongClickListener {
+    MyRecyclerAdapter.buttonClickListener {
 
     public static final int QUERY_LOADER = 22;
     private FloatingActionButton fab;
@@ -71,7 +68,6 @@ public class DetailFragment extends Fragment
 
         //set recyclerview
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.addItemDecoration(new MyDividerItemDecoration(getActivity(), MyDividerItemDecoration.VERTICAL_LIST));
         adapter = new MyRecyclerAdapter(getActivity(), null, this);
         recyclerView.setAdapter(adapter);
 
@@ -285,15 +281,18 @@ public class DetailFragment extends Fragment
         }
     };
 
-    @Override public void onListItemLongClickListener(long id) {
-        Toast.makeText(getActivity(), "id:" + id, Toast.LENGTH_SHORT).show();
-        Vibrator vibrator = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
-        vibrator.vibrate(300);
+    @Override public void onButtonClickListener(long id, String which) {
+        switch (which){
+            case "edit":
+                Expense_item item = query(id);
 
-        Expense_item item = query(id);
-
-        DialogFragment dialog = MyDialog.newInstance(id, item);
-        dialog.show(getChildFragmentManager(), "add");
-
+                DialogFragment dialog = MyDialog.newInstance(id, item);
+                dialog.show(getChildFragmentManager(), "add");
+                break;
+            case "delete":
+                delete(id);
+                getActivity().getSupportLoaderManager().restartLoader(QUERY_LOADER, null, DetailFragment.this);
+                break;
+        }
     }
 }
