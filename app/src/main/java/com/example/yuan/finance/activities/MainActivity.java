@@ -12,7 +12,7 @@ import com.example.yuan.finance.adapters.MyFragmentPagerAdapter;
 
 // TODO: 2017/04/17 備註改成卡片，備註改成icon info
 // TODO: 2017/04/17 滑動翻月
-// TODO: 2017/04/17 主題
+
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private MyTabLayout mTabLayout;

@@ -10,4 +10,8 @@
     <string name="total">本月總金額:</string>
     <string name="edit">編輯</string>
     <string name="delete">刪除</string>
+    <string name="source">來源</string>
+    <string name="input_account">請輸入新帳戶</string>
+    <string name="add_account">新增帳戶</string>
+    <string name="add">新增</string>
 </resources>

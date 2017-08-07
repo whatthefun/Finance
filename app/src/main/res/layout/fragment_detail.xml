@@ -59,6 +59,7 @@
                     android:textSize="30sp"
                     tools:text="MM月"
                     android:background="@drawable/bg_selector"
+                    android:layout_marginBottom="3dp"
                     />
             </LinearLayout>
 
@@ -96,7 +97,7 @@
             android:layout_marginLeft="5dp"
             android:layout_weight="1.5"
             android:text="@string/total"
-            android:textColor="#007799"
+            android:textColor="@color/bright_blue"
             android:textSize="30sp"
             />
     </LinearLayout>
