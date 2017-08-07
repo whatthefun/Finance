@@ -48,9 +48,25 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.Vi
         if (mCursor == null || !mCursor.moveToPosition(position)) {
             return;
         }
+        String amount = mCursor.getInt(2) + "";
+        String number = "";
+
+        if (amount.length() > 3){
+            int remainder = amount.length() %3;
+            if (remainder != 0) {
+                number = amount.substring(0, remainder) + ",";
+            }else {
+                number = amount.substring(0, remainder);
+            }
+
+            for (int i = remainder; i < amount.length(); i += 3) {
+                number += amount.substring(i, i+3) + ",";
+            }
+            number = number.substring(0, number.length()-1);
+        }
 
         holder.txtDate.setText(mCursor.getString(mCursor.getColumnIndex("date")).substring(5));
-        holder.txtAmount.setText("$" + mCursor.getInt(2) + "");
+        holder.txtAmount.setText("$" + number);
         //holder.txtComment.setText(mCursor.getString(3));
         holder.item.setTag(mCursor.getLong(mCursor.getColumnIndex("_id")));
     }

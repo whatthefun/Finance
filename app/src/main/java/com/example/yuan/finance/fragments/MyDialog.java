@@ -10,6 +10,8 @@ import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatImageButton;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,6 +48,7 @@ public class MyDialog extends android.support.v4.app.DialogFragment {
     private String date, comment;
     private int amount;
     private int index;
+    private boolean isChange = false;
 
     public interface DialogListener {
         public void onDialogPositiveClick(long id, int amount, String date, String comment);
@@ -92,6 +95,46 @@ public class MyDialog extends android.support.v4.app.DialogFragment {
         imgBtnDecrease = (AppCompatImageButton) view.findViewById(R.id.imgBtnDecrease);
         imgBtnPickDate = (AppCompatImageButton) view.findViewById(R.id.imgBtnPickDate);
 
+
+        edtAmount.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String str = s.toString();
+                String number;
+                str = str.replaceAll("[$,]", "");
+                if (!isChange){
+                    if (str.length() > 3){
+                        int remainder = str.length() %3;
+                        if (remainder != 0) {
+                            number = str.substring(0, remainder) + ",";
+                        }else {
+                            number = str.substring(0, remainder);
+                        }
+
+                        for (int i = remainder; i < str.length(); i += 3) {
+                            number += str.substring(i, i+3) + ",";
+                        }
+                        isChange = true;
+                        edtAmount.setText("$" + number.substring(0, number.length()-1));
+                        edtAmount.setSelection(edtAmount.getText().length());
+                        isChange = false;
+                    }else {
+                        isChange = true;
+                        edtAmount.setText("$" + str);
+                        edtAmount.setSelection(edtAmount.getText().length());
+                        isChange = false;
+                    }
+                }
+            }
+
+            @Override public void afterTextChanged(Editable s) {
+
+            }
+        });
+
         Typeface font = Typeface.createFromAsset(getActivity().getAssets(), "fonts/chinese.ttf");
         txtTitle.setTypeface(font);
         imgBtnIncrease.setOnClickListener(adjustListener);
@@ -126,7 +169,7 @@ public class MyDialog extends android.support.v4.app.DialogFragment {
                 if (edtAmount.getText().toString().length() > 0
                     && edtDate.getText().toString().length() > 0) {
                     mListener.onDialogPositiveClick(id,
-                        Integer.parseInt(edtAmount.getText().toString()),
+                        Integer .parseInt(edtAmount.getText().toString().replaceAll("[$,]", "")),
                         edtDate.getText().toString(), edtComment.getText().toString());
                 } else {
                     Toast.makeText(getActivity(), "新增失敗! 金額或日期不可為空白", Toast.LENGTH_SHORT).show();
@@ -140,7 +183,7 @@ public class MyDialog extends android.support.v4.app.DialogFragment {
     AppCompatImageButton.OnClickListener adjustListener =
         new AppCompatImageButton.OnClickListener() {
             @Override public void onClick(View v) {
-                int amount = Integer.parseInt(edtAmount.getText().toString());
+                int amount = Integer.parseInt(edtAmount.getText().toString().replaceAll("[$,]", ""));
                 if (v.getId() == R.id.imgBtnIncrease) {
                     amount += 1000;
                 } else if (v.getId() == R.id.imgBtnDecrease) {

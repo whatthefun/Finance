@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/input_amount"
                 android:inputType="number"
-                android:text="1000"
+                android:text="1,000"
                 android:textSize="25sp"
                 />
         </android.support.design.widget.TextInputLayout>
